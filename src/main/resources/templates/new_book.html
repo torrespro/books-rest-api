@@ -1,0 +1,62 @@
+<!doctype html>
+<head>
+  <title>Create Book</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Book details</h2>
+  <form action="/create" method="post" name="book">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Field</th>
+        <th>Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#book}}
+      <tr>
+        <th>Title</th>
+        <td><input class="form-control" type="text" name="title"
+                   value="{{#title}}{{title}}{{/title}}" required/></td>
+      </tr>
+      <tr>
+        <th>Author</th>
+        <td><input class="form-control" type="text" name="author"
+                   value="{{#author}}{{author}}{{/author}}"/></td>
+      </tr>
+      <tr>
+        <th>Summary</th>
+        <td><textarea class="form-control" rows=5 cols=40 name="summary">{{#summary}}{{summary}}{{/summary}}</textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>Publisher</th>
+        <td><input class="form-control" type="text" name="publisher"
+                   value="{{#publisher}}{{publisher}}{{/publisher}}"/></td>
+      </tr>
+      <tr>
+        <th>Year</th>
+        <td><input class="form-control" type="text" name="published_year"
+                   value="{{#published_year}}{{published_year}}{{/published_year}}"/></td>
+      </tr>
+      {{/book}}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-primary" href="/">Back</a>
+  </form>
+</div>
+</div>
+
+</body>
+</html>
