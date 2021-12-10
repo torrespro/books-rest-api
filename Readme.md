@@ -1,4 +1,4 @@
-# Práctica 1. Web y API  REST con Spring
+# Práctica 2. Bases de Datos (SpringBoot+MySQL)
 
 ## Description
 
