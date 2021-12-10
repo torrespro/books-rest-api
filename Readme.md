@@ -2,30 +2,25 @@
 
 ## Description
 
-Aplicación web que incluye con un listado de libros y comentarios de cada libro, la aplicación también incluye una API REST.
-La aplicación consta de dos Controllers, uno para la API Rest y otro que maneja la aplicación web sirviendo las templates de Mustache, un Servicio que maneja la lógica de negocio y el acceso a los datos, y luegos las clases de Modelo.
-No hay base de datos, solo almacenamiento en memoria, donde se almancenan libros y sus comentarios en la misma estructura.
+La aplicación también incluye una API REST para gestionar libros, comentarios de los libros y usuarios
+La aplicación consta de dos Controllers, uno para la API Rest de Libros y Comentarios y otro que maneja la API de usuarios, dos Servicios que maneja la lógica de negocio de cada controller y el acceso a los datos, y luego las clases de Modelo.
+La persistencia se hace en base de datos MySQL, el esquema es autogenerado basado en las @Entity definidas en código.
 
-    private ConcurrentMap<Long, Book> books = new ConcurrentHashMap<>();
-
-En un primer diseño el almacenamiento consistia en dos Maps:
-
-    private ConcurrentMap<Long, Book> books = new ConcurrentHashMap<>();
-    private ConcurrentMap<Pair(Long,Long), Comment> comment = new ConcurrentHashMap<>();
-
-Había dos Servicios y en ellos se accedía a las estructuras de datos, Comment se accedía usando el BookId y el CommentId, al final se optó por la simplicidad de mantener los Comments en la misma estructura de los Books.
+![db-schema](./db-schema.png)
 
 ## Technologies used
 
 - Java 17
-- Spring Boot 2.6.0
+- Spring Boot 2.6.1
 - OpenAPI 3.0.0
-- Mustache
 - JUnit 5
 - SpringDoc OpenAPI
+- MySQL 5.7/8.0.22
 - [OpenAPI Generator for HTML](https://openapi-generator.tech/docs/generators/html2/)
 - [Java Faker](https://github.com/DiUS/java-faker)
 - [Error Handling Spring Boot](https://github.com/wimdeblauwe/blog-example-code/tree/master/error-handling-lib-example)
+- [Datasource proxy](https://github.com/gavlyukovskiy/spring-boot-data-source-decorator)
+- [Schema Spy](https://schemaspy.org/)
 
 ## Requirements
 
@@ -37,6 +32,7 @@ Había dos Servicios y en ellos se accedía a las estructuras de datos, Comment 
 - [Requirements](./Requirements.md)
 - [OpenAPI spec](./api-docs/api-docs.yaml)
 - [OpenAPI html](./api-docs/api-docs.html)
+- [Database Documentation html](./db-docs/books/index.html)
 
 ## Build
 
@@ -45,6 +41,10 @@ Había dos Servicios y en ellos se accedía a las estructuras de datos, Comment 
 Genera el executable jar dentro de /target, la OpenAPI spec y el OpenAPI html dentro de la carpeta /api-docs
 
 ## Setup 
+
+Necesitamos una Base de Datos MySQL funcionando:
+
+    > docker run --rm -e MYSQL_ROOT_PASSWORD=backbase -e  MYSQL_DATABASE=books -p 3306:3306 -d mysql:8.0.22
 
 Spring boot application:
 
@@ -61,7 +61,7 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-runnin
 
 ## How to test
 
-Durante el arranque de la aplicación se genera test-data, 5 libros (con Ids 1-5) con 2 comentarios cada uno (con Ids 1-2), con datos aleatorios. 
+Durante el arranque de la aplicación se inserta [test-data](./src/main/resources/import.sql), 1 libro (con Ids 1) con 1 comentario (con Ids 1) y un Usuario con ID "juan". 
 Se pueden probar los endpoints usando la [Postman](https://www.postman.com/) collection incluida:
 
 - [Postman Collection](./MasterCloudApps-Books.postman_collection.json)

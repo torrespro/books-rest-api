@@ -1,90 +1,108 @@
 package es.torres.books.service;
 
-import com.github.javafaker.Faker;
 import es.torres.books.exception.BookNotFoundException;
 import es.torres.books.exception.CommentNotFoundException;
+import es.torres.books.mapper.BookMapper;
+import es.torres.books.mapper.CommentMapper;
+import es.torres.books.mapper.UserMapper;
 import es.torres.books.model.Book;
+import es.torres.books.model.BookListResponseDTO;
+import es.torres.books.model.BookPostDTO;
 import es.torres.books.model.Comment;
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
+import es.torres.books.persistence.BookRepository;
+import es.torres.books.persistence.CommentRepository;
+import es.torres.books.persistence.UserRepository;
+import es.torres.books.persistence.entity.BookEntity;
+import es.torres.books.persistence.entity.CommentEntity;
+import es.torres.books.persistence.entity.UserEntity;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookService {
 
-    private ConcurrentMap<Long, Book> books = new ConcurrentHashMap<>();
-    private AtomicLong nextId = new AtomicLong(10);
+    final BookRepository bookRepository;
+    final CommentRepository commentRepository;
+    final UserRepository userRepository;
 
-    public BookService() {
-        createFakeData(5);
+    private final BookMapper mapper;
+    private final CommentMapper commentMapper;
+    private final UserMapper userMapper;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public BookService(BookRepository bookRepository, CommentRepository commentRepository,
+        UserRepository userRepository, BookMapper mapper, CommentMapper commentMapper,
+        UserMapper userMapper) {
+        this.bookRepository = bookRepository;
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+        this.commentMapper = commentMapper;
+        this.userMapper = userMapper;
     }
 
-    public Collection<Book> findAll() {
-        return books.values();
+    @Transactional(readOnly = true)
+    public List<Book> findAll() {
+        return mapper.entityListToApiList(bookRepository.findAll());
     }
 
+    @Transactional(readOnly = true)
     public Book findById(long id) {
-        Book book = books.get(id);
-        if (book != null) {
-            return book;
-        } else {
-            throw new BookNotFoundException(id);
-        }
+        return mapper.entityToApi(bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id)));
     }
 
-    public Book save(Book book) {
-        long id = nextId.getAndIncrement();
-        book.setId(id);
-        this.books.put(id, book);
-        return book;
+    @Transactional
+    public BookPostDTO save(BookPostDTO book) {
+        BookEntity bookEntity = bookRepository.save(mapper.apiPostToEntity(book));
+        return mapper.entityToApiPost(bookEntity);
     }
 
+    @Transactional
     public Comment save(Comment comment, long bookId) {
-        Book book = findById(bookId);
-        long id = nextId.getAndIncrement();
-        comment.setId(id);
-        book.getCommentsMap().put(id, comment);
-        return comment;
+        CommentEntity commentEntity = commentMapper.apiToEntity(comment);
+        UserEntity userEntity = this.userRepository.findByNickname(comment.getUsername()).orElseGet(UserEntity::new);
+        userEntity.setNickname(comment.getUsername());
+        BookEntity bookEntity =  bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
+        commentEntity.setBook(bookEntity);
+        commentEntity.setUser(userEntity);
+        userRepository.save(userEntity);
+        return commentMapper.entityToApi(commentRepository.save(commentEntity));
     }
 
+    @Transactional
     public void deleteById(long id) {
-        this.books.remove(id);
+        bookRepository.deleteById(id);
     }
 
+    @Transactional
     public void deleteComment(long bookId, long id) {
-        findById(bookId).getCommentsMap().remove(id);
-        ;
+        commentRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public Comment findCommentById(long bookId, long id) {
-        Comment comment = findById(bookId).getCommentsMap().get(id);
-        if (comment != null) {
-            return comment;
-        } else {
-            throw new CommentNotFoundException(id);
-        }
+        return commentMapper.entityToApi(commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id)));
     }
 
-    private void createFakeData(int size) {
-        Faker faker = new Faker();
-        for (int i = 1; i <= size; i++) {
-            final Long id = Long.valueOf(i);
-            Book book = new Book(id,
-                faker.book().title(),
-                faker.lorem().paragraph(),
-                faker.book().author(),
-                faker.book().title(),
-                faker.number().numberBetween(1900, 2020), new ConcurrentHashMap<>());
-            for (int j = 1; j <= 2; j++) {
-                final Long commentId = Long.valueOf(j);
-                Comment comment = new Comment(
-                    commentId, faker.name().fullName(), faker.lorem().sentence(),
-                    Integer.valueOf(faker.number().numberBetween(1, 6)).shortValue());
-                book.getCommentsMap().put(commentId, comment);
-            }
-            books.put(id, book);
-        }
+    @Transactional(readOnly = true)
+    public List<BookListResponseDTO> findAllBooks() {
+        List<BookListResponseDTO> postDTOs = entityManager.createQuery("""
+                   select
+                      p.id as id,
+                      p.title as title
+                   from BookEntity p
+                """)
+            .unwrap(org.hibernate.query.Query.class)
+            .setResultTransformer(Transformers.aliasToBean(BookListResponseDTO.class))
+            .getResultList();
+        return postDTOs;
     }
+
+
 }

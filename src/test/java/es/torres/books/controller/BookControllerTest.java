@@ -14,9 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.javafaker.Faker;
 import es.torres.books.model.Book;
+import es.torres.books.model.BookListResponseDTO;
+import es.torres.books.model.BookPostDTO;
 import es.torres.books.service.BookService;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,12 +44,13 @@ class BookControllerTest {
         faker.lorem().paragraph(),
         faker.book().author(),
         faker.book().title(),
-        faker.number().numberBetween(1900, 2020), new ConcurrentHashMap<>());
+        faker.number().numberBetween(1900, 2020), new ArrayList<>());
+    BookPostDTO quijote = new BookPostDTO(1L, "El Quijote", "", "", "", null);
 
     @Test
     void shouldGetEmptyArrayWhenNoBooks() throws Exception {
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/books/")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books/")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -60,10 +63,10 @@ class BookControllerTest {
     @DisplayName("should return a list of books")
     void shouldGetBooksWhenServiceReturnsBooks() throws Exception {
 
-        when(bookService.findAll()).thenReturn(List.of(book, book));
+        when(bookService.findAllBooks()).thenReturn(List.of(new BookListResponseDTO(), new BookListResponseDTO()));
 
         this.mockMvc
-            .perform(get("/books/")
+            .perform(get("/api/v1/books/")
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON))
             .andExpect(status().is(200))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -77,7 +80,7 @@ class BookControllerTest {
         when(bookService.findById(1L)).thenReturn(book);
 
         this.mockMvc
-            .perform(get("/books/{id}", 1L)
+            .perform(get("/api/v1/books/{id}", 1L)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON))
             .andExpect(status().is(200))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -100,11 +103,11 @@ class BookControllerTest {
             }
             """;
 
-        when(bookService.save(any())).thenReturn(new Book(1L, "El Quijote", "", "", "", null, new ConcurrentHashMap<>()));
+        when(bookService.save(any())).thenReturn(quijote);
 
         this
             .mockMvc
-            .perform(post("/books/")
+            .perform(post("/api/v1/books/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isCreated())
@@ -117,7 +120,7 @@ class BookControllerTest {
     @Test
     void shouldAllowDeletingProduct() throws Exception {
         this.mockMvc
-            .perform(delete("/books/{id}", 1L)
+            .perform(delete("/api/v1/books/{id}", 1L)
             )
             .andExpect(status().isNoContent());
         verify(bookService).deleteById(1L);

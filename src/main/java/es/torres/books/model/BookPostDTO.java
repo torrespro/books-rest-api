@@ -1,12 +1,10 @@
 package es.torres.books.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class Book {
+public class BookPostDTO {
 
     private Long id;
     @NotBlank
@@ -16,20 +14,17 @@ public class Book {
     private String author;
     private String publisher;
     private Integer publicationYear;
-    private Collection<CommentResponseDTO> comments = new ArrayList<>();
 
-    public Book(Long id, String title, String summary, String author, String publisher, Integer publicationYear,
-        Collection<CommentResponseDTO> comments) {
+    public BookPostDTO(Long id, String title, String summary, String author, String publisher, Integer publicationYear) {
         this.id = id;
         this.title = title;
         this.summary = summary;
         this.author = author;
         this.publisher = publisher;
         this.publicationYear = publicationYear;
-        this.comments = comments;
     }
 
-    public Book() {
+    public BookPostDTO() {
 
     }
 
@@ -81,21 +76,13 @@ public class Book {
         this.publicationYear = publicationYear;
     }
 
-    public Collection<CommentResponseDTO> getComments() {
-        return comments;
-    }
-
-    public void setComments(Collection<CommentResponseDTO> comments) {
-        this.comments = comments;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
         if (obj == null || obj.getClass() != this.getClass())
             return false;
-        var that = (Book) obj;
+        var that = (BookPostDTO) obj;
         return Objects.equals(this.id, that.id) &&
             Objects.equals(this.title, that.title) &&
             Objects.equals(this.summary, that.summary) &&

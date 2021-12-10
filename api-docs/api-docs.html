@@ -868,26 +868,19 @@ ul.nav-tabs {
     "publisher" : {
       "type" : "string"
     },
-    "published_year" : {
+    "publicationYear" : {
       "type" : "integer",
       "format" : "int32"
     },
     "comments" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/Comment"
-      }
-    },
-    "commentsMap" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "$ref" : "#/components/schemas/Comment"
+        "$ref" : "#/components/schemas/CommentResponseDTO"
       }
     }
   }
 };
-    defs["Book_Basic"] = {
-  "required" : [ "title" ],
+    defs["BookListResponseDTO"] = {
   "type" : "object",
   "properties" : {
     "id" : {
@@ -895,19 +888,11 @@ ul.nav-tabs {
       "format" : "int64"
     },
     "title" : {
-      "maxLength" : 200,
-      "minLength" : 2,
       "type" : "string"
-    },
-    "commentsMap" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "$ref" : "#/components/schemas/Comment_Basic"
-      }
     }
   }
 };
-    defs["Book_BookDetail"] = {
+    defs["BookPostDTO"] = {
   "required" : [ "title" ],
   "type" : "object",
   "properties" : {
@@ -929,21 +914,9 @@ ul.nav-tabs {
     "publisher" : {
       "type" : "string"
     },
-    "published_year" : {
+    "publicationYear" : {
       "type" : "integer",
       "format" : "int32"
-    },
-    "comments" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/Comment_BookDetail"
-      }
-    },
-    "commentsMap" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "$ref" : "#/components/schemas/Comment_BookDetail"
-      }
     }
   }
 };
@@ -973,8 +946,7 @@ ul.nav-tabs {
     }
   }
 };
-    defs["Comment_BookDetail"] = {
-  "required" : [ "text", "username" ],
+    defs["CommentDTO"] = {
   "type" : "object",
   "properties" : {
     "id" : {
@@ -982,20 +954,43 @@ ul.nav-tabs {
       "format" : "int64"
     },
     "username" : {
-      "maxLength" : 20,
-      "minLength" : 2,
       "type" : "string"
     },
     "text" : {
-      "maxLength" : 200,
-      "minLength" : 3,
       "type" : "string"
     },
     "rating" : {
-      "maximum" : 5,
-      "minimum" : 0,
       "type" : "integer",
       "format" : "int32"
+    },
+    "book_id" : {
+      "type" : "integer",
+      "format" : "int64"
+    }
+  }
+};
+    defs["CommentResponseDTO"] = {
+  "type" : "object",
+  "properties" : {
+    "text" : {
+      "type" : "string"
+    },
+    "nick" : {
+      "type" : "string"
+    },
+    "email" : {
+      "type" : "string"
+    }
+  }
+};
+    defs["UserDTO"] = {
+  "type" : "object",
+  "properties" : {
+    "email" : {
+      "type" : "string"
+    },
+    "nickname" : {
+      "type" : "string"
     }
   }
 };
@@ -1039,6 +1034,25 @@ ul.nav-tabs {
                     <li data-group="BookController" data-name="getCommentByBookAndId" class="">
                       <a href="#api-BookController-getCommentByBookAndId">getCommentByBookAndId</a>
                     </li>
+                  <li class="nav-header" data-group="UserController"><a href="#api-UserController">API Methods - UserController</a></li>
+                    <li data-group="UserController" data-name="createUser" class="">
+                      <a href="#api-UserController-createUser">createUser</a>
+                    </li>
+                    <li data-group="UserController" data-name="deleteUser" class="">
+                      <a href="#api-UserController-deleteUser">deleteUser</a>
+                    </li>
+                    <li data-group="UserController" data-name="getCommentsByUserId" class="">
+                      <a href="#api-UserController-getCommentsByUserId">getCommentsByUserId</a>
+                    </li>
+                    <li data-group="UserController" data-name="getUserById" class="">
+                      <a href="#api-UserController-getUserById">getUserById</a>
+                    </li>
+                    <li data-group="UserController" data-name="getUsers" class="">
+                      <a href="#api-UserController-getUsers">getUsers</a>
+                    </li>
+                    <li data-group="UserController" data-name="updateUser" class="">
+                      <a href="#api-UserController-updateUser">updateUser</a>
+                    </li>
           </ul>
         </nav>
       </div>
@@ -1074,7 +1088,7 @@ ul.nav-tabs {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/books/</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/books/</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1098,31 +1112,12 @@ ul.nav-tabs {
                             <pre class="prettyprint"><code class="language-bsh">curl -X POST \
  -H "Accept: application/json" \
  -H "Content-Type: application/json" \
- "http://localhost:8080/books/" \
+ "http://localhost:8080/api/v1/books/" \
  -d '{
   &quot;summary&quot; : &quot;summary&quot;,
-  &quot;comments&quot; : [ {
-    &quot;rating&quot; : 3,
-    &quot;id&quot; : 0,
-    &quot;text&quot; : &quot;text&quot;,
-    &quot;username&quot; : &quot;username&quot;
-  }, {
-    &quot;rating&quot; : 3,
-    &quot;id&quot; : 0,
-    &quot;text&quot; : &quot;text&quot;,
-    &quot;username&quot; : &quot;username&quot;
-  } ],
-  &quot;published_year&quot; : 6,
   &quot;author&quot; : &quot;author&quot;,
-  &quot;commentsMap&quot; : {
-    &quot;key&quot; : {
-      &quot;rating&quot; : 3,
-      &quot;id&quot; : 0,
-      &quot;text&quot; : &quot;text&quot;,
-      &quot;username&quot; : &quot;username&quot;
-    }
-  },
   &quot;publisher&quot; : &quot;publisher&quot;,
+  &quot;publicationYear&quot; : 6,
   &quot;id&quot; : 0,
   &quot;title&quot; : &quot;title&quot;
 }'
@@ -1142,10 +1137,10 @@ public class BookControllerApiExample {
 
         // Create an instance of the API class
         BookControllerApi apiInstance = new BookControllerApi();
-        Book book = ; // Book | 
+        BookPostDTO bookPostDTO = ; // BookPostDTO | 
 
         try {
-            Book result = apiInstance.createBook(book);
+            Book result = apiInstance.createBook(bookPostDTO);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling BookControllerApi#createBook");
@@ -1162,10 +1157,10 @@ public class BookControllerApiExample {
 public class BookControllerApiExample {
     public static void main(String[] args) {
         BookControllerApi apiInstance = new BookControllerApi();
-        Book book = ; // Book | 
+        BookPostDTO bookPostDTO = ; // BookPostDTO | 
 
         try {
-            Book result = apiInstance.createBook(book);
+            Book result = apiInstance.createBook(bookPostDTO);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling BookControllerApi#createBook");
@@ -1183,10 +1178,10 @@ public class BookControllerApiExample {
 
 // Create an instance of the API class
 BookControllerApi *apiInstance = [[BookControllerApi alloc] init];
-Book *book = ; // 
+BookPostDTO *bookPostDTO = ; // 
 
 // Creates a new book
-[apiInstance createBookWith:book
+[apiInstance createBookWith:bookPostDTO
               completionHandler: ^(Book output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
@@ -1203,7 +1198,7 @@ Book *book = ; //
 
 // Create an instance of the API class
 var api = new BookApplicationApi.BookControllerApi()
-var book = ; // {Book} 
+var bookPostDTO = ; // {BookPostDTO} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -1212,7 +1207,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.createBook(book, callback);
+api.createBook(bookPostDTO, callback);
 </code></pre>
                             </div>
 
@@ -1235,11 +1230,11 @@ namespace Example
 
             // Create an instance of the API class
             var apiInstance = new BookControllerApi();
-            var book = new Book(); // Book | 
+            var bookPostDTO = new BookPostDTO(); // BookPostDTO | 
 
             try {
                 // Creates a new book
-                Book result = apiInstance.createBook(book);
+                Book result = apiInstance.createBook(bookPostDTO);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling BookControllerApi.createBook: " + e.Message );
@@ -1256,10 +1251,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 // Create an instance of the API class
 $api_instance = new OpenAPITools\Client\Api\BookControllerApi();
-$book = ; // Book | 
+$bookPostDTO = ; // BookPostDTO | 
 
 try {
-    $result = $api_instance->createBook($book);
+    $result = $api_instance->createBook($bookPostDTO);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling BookControllerApi->createBook: ', $e->getMessage(), PHP_EOL;
@@ -1274,10 +1269,10 @@ use WWW::OPenAPIClient::BookControllerApi;
 
 # Create an instance of the API class
 my $api_instance = WWW::OPenAPIClient::BookControllerApi->new();
-my $book = WWW::OPenAPIClient::Object::Book->new(); # Book | 
+my $bookPostDTO = WWW::OPenAPIClient::Object::BookPostDTO->new(); # BookPostDTO | 
 
 eval {
-    my $result = $api_instance->createBook(book => $book);
+    my $result = $api_instance->createBook(bookPostDTO => $bookPostDTO);
     print Dumper($result);
 };
 if ($@) {
@@ -1294,11 +1289,11 @@ from pprint import pprint
 
 # Create an instance of the API class
 api_instance = openapi_client.BookControllerApi()
-book =  # Book | 
+bookPostDTO =  # BookPostDTO | 
 
 try:
     # Creates a new book
-    api_response = api_instance.create_book(book)
+    api_response = api_instance.create_book(bookPostDTO)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling BookControllerApi->createBook: %s\n" % e)</code></pre>
@@ -1308,10 +1303,10 @@ except ApiException as e:
                               <pre class="prettyprint"><code class="language-rust">extern crate BookControllerApi;
 
 pub fn main() {
-    let book = ; // Book
+    let bookPostDTO = ; // BookPostDTO
 
     let mut context = BookControllerApi::Context::default();
-    let result = client.createBook(book, &context).wait();
+    let result = client.createBook(bookPostDTO, &context).wait();
 
     println!("{:?}", result);
 }
@@ -1334,7 +1329,7 @@ pub fn main() {
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">book <span style="color:red;">*</span></td>
+                                <tr><td style="width:150px;">bookPostDTO <span style="color:red;">*</span></td>
 <td>
 <p class="marked"></p>
 <script>
@@ -1343,7 +1338,7 @@ $(document).ready(function() {
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/Book"
+        "$ref" : "#/components/schemas/BookPostDTO"
       }
     }
   },
@@ -1364,12 +1359,12 @@ $(document).ready(function() {
   }
 
   var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_createBook_book');
+  var result = $('#d2e199_createBook_bookPostDTO');
   result.empty();
   result.append(view.render());
 });
 </script>
-<div id="d2e199_createBook_book"></div>
+<div id="d2e199_createBook_bookPostDTO"></div>
 </td>
 </tr>
 
@@ -1378,50 +1373,6 @@ $(document).ready(function() {
 
 
                           <h2>Responses</h2>
-                            <h3 id="examples-BookController-createBook-title-400"></h3>
-                            <p id="examples-BookController-createBook-description-400" class="marked"></p>
-                            <script>
-                              var responseBookController400_description = `If one or more request parameters don't comply with the specification`;
-                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
-                              if (responseBookController400_description_break == -1) {
-                                $("#examples-BookController-createBook-title-400").text("Status: 400 - " + responseBookController400_description);
-                              } else {
-                                $("#examples-BookController-createBook-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
-                                $("#examples-BookController-createBook-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-createBook-400" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-createBook-400-wrapper" style='margin-bottom: 10px;'>
-                            </div>
-                            <h3 id="examples-BookController-createBook-title-500"></h3>
-                            <p id="examples-BookController-createBook-description-500" class="marked"></p>
-                            <script>
-                              var responseBookController500_description = `If a runtime error occurs while processing the request`;
-                              var responseBookController500_description_break = responseBookController500_description.indexOf('\n');
-                              if (responseBookController500_description_break == -1) {
-                                $("#examples-BookController-createBook-title-500").text("Status: 500 - " + responseBookController500_description);
-                              } else {
-                                $("#examples-BookController-createBook-title-500").text("Status: 500 - " + responseBookController500_description.substring(0, responseBookController500_description_break));
-                                $("#examples-BookController-createBook-description-500").html(responseBookController500_description.substring(responseBookController500_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-createBook-500" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-createBook-500-wrapper" style='margin-bottom: 10px;'>
-                            </div>
                             <h3 id="examples-BookController-createBook-title-200"></h3>
                             <p id="examples-BookController-createBook-description-200" class="marked"></p>
                             <script>
@@ -1488,6 +1439,50 @@ $(document).ready(function() {
                                   <input id='responses-BookController-createBook-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
+                            <h3 id="examples-BookController-createBook-title-500"></h3>
+                            <p id="examples-BookController-createBook-description-500" class="marked"></p>
+                            <script>
+                              var responseBookController500_description = `If a runtime error occurs while processing the request`;
+                              var responseBookController500_description_break = responseBookController500_description.indexOf('\n');
+                              if (responseBookController500_description_break == -1) {
+                                $("#examples-BookController-createBook-title-500").text("Status: 500 - " + responseBookController500_description);
+                              } else {
+                                $("#examples-BookController-createBook-title-500").text("Status: 500 - " + responseBookController500_description.substring(0, responseBookController500_description_break));
+                                $("#examples-BookController-createBook-description-500").html(responseBookController500_description.substring(responseBookController500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-createBook-500" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-createBook-500-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-BookController-createBook-title-400"></h3>
+                            <p id="examples-BookController-createBook-description-400" class="marked"></p>
+                            <script>
+                              var responseBookController400_description = `If one or more request parameters don't comply with the specification`;
+                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
+                              if (responseBookController400_description_break == -1) {
+                                $("#examples-BookController-createBook-title-400").text("Status: 400 - " + responseBookController400_description);
+                              } else {
+                                $("#examples-BookController-createBook-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
+                                $("#examples-BookController-createBook-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-createBook-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-createBook-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
                         </article>
                       </div>
                       <hr>
@@ -1503,7 +1498,7 @@ $(document).ready(function() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/books/{id}/comments</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/books/{id}/comments</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1527,7 +1522,7 @@ $(document).ready(function() {
                             <pre class="prettyprint"><code class="language-bsh">curl -X POST \
  -H "Accept: application/json" \
  -H "Content-Type: application/json" \
- "http://localhost:8080/books/{id}/comments" \
+ "http://localhost:8080/api/v1/books/{id}/comments" \
  -d '{
   &quot;rating&quot; : 3,
   &quot;id&quot; : 0,
@@ -1826,50 +1821,6 @@ $(document).ready(function() {
 
 
                           <h2>Responses</h2>
-                            <h3 id="examples-BookController-createComment-title-400"></h3>
-                            <p id="examples-BookController-createComment-description-400" class="marked"></p>
-                            <script>
-                              var responseBookController400_description = `If one or more request parameters don't comply with the specification`;
-                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
-                              if (responseBookController400_description_break == -1) {
-                                $("#examples-BookController-createComment-title-400").text("Status: 400 - " + responseBookController400_description);
-                              } else {
-                                $("#examples-BookController-createComment-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
-                                $("#examples-BookController-createComment-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-createComment-400" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-createComment-400-wrapper" style='margin-bottom: 10px;'>
-                            </div>
-                            <h3 id="examples-BookController-createComment-title-500"></h3>
-                            <p id="examples-BookController-createComment-description-500" class="marked"></p>
-                            <script>
-                              var responseBookController500_description = `If a runtime error occurs while processing the request`;
-                              var responseBookController500_description_break = responseBookController500_description.indexOf('\n');
-                              if (responseBookController500_description_break == -1) {
-                                $("#examples-BookController-createComment-title-500").text("Status: 500 - " + responseBookController500_description);
-                              } else {
-                                $("#examples-BookController-createComment-title-500").text("Status: 500 - " + responseBookController500_description.substring(0, responseBookController500_description_break));
-                                $("#examples-BookController-createComment-description-500").html(responseBookController500_description.substring(responseBookController500_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-createComment-500" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-createComment-500-wrapper" style='margin-bottom: 10px;'>
-                            </div>
                             <h3 id="examples-BookController-createComment-title-200"></h3>
                             <p id="examples-BookController-createComment-description-200" class="marked"></p>
                             <script>
@@ -1936,6 +1887,50 @@ $(document).ready(function() {
                                   <input id='responses-BookController-createComment-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
+                            <h3 id="examples-BookController-createComment-title-500"></h3>
+                            <p id="examples-BookController-createComment-description-500" class="marked"></p>
+                            <script>
+                              var responseBookController500_description = `If a runtime error occurs while processing the request`;
+                              var responseBookController500_description_break = responseBookController500_description.indexOf('\n');
+                              if (responseBookController500_description_break == -1) {
+                                $("#examples-BookController-createComment-title-500").text("Status: 500 - " + responseBookController500_description);
+                              } else {
+                                $("#examples-BookController-createComment-title-500").text("Status: 500 - " + responseBookController500_description.substring(0, responseBookController500_description_break));
+                                $("#examples-BookController-createComment-description-500").html(responseBookController500_description.substring(responseBookController500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-createComment-500" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-createComment-500-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-BookController-createComment-title-400"></h3>
+                            <p id="examples-BookController-createComment-description-400" class="marked"></p>
+                            <script>
+                              var responseBookController400_description = `If one or more request parameters don't comply with the specification`;
+                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
+                              if (responseBookController400_description_break == -1) {
+                                $("#examples-BookController-createComment-title-400").text("Status: 400 - " + responseBookController400_description);
+                              } else {
+                                $("#examples-BookController-createComment-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
+                                $("#examples-BookController-createComment-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-createComment-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-createComment-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
                         </article>
                       </div>
                       <hr>
@@ -1951,7 +1946,7 @@ $(document).ready(function() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/books/{id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/books/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1974,7 +1969,7 @@ $(document).ready(function() {
                           <div class="tab-pane active" id="examples-BookController-deleteBook-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X DELETE \
  -H "Accept: application/json" \
- "http://localhost:8080/books/{id}"
+ "http://localhost:8080/api/v1/books/{id}"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-BookController-deleteBook-0-java">
@@ -2211,6 +2206,50 @@ pub fn main() {
 
 
                           <h2>Responses</h2>
+                            <h3 id="examples-BookController-deleteBook-title-404"></h3>
+                            <p id="examples-BookController-deleteBook-description-404" class="marked"></p>
+                            <script>
+                              var responseBookController404_description = `Book not found`;
+                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
+                              if (responseBookController404_description_break == -1) {
+                                $("#examples-BookController-deleteBook-title-404").text("Status: 404 - " + responseBookController404_description);
+                              } else {
+                                $("#examples-BookController-deleteBook-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
+                                $("#examples-BookController-deleteBook-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-deleteBook-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-deleteBook-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-BookController-deleteBook-title-400"></h3>
+                            <p id="examples-BookController-deleteBook-description-400" class="marked"></p>
+                            <script>
+                              var responseBookController400_description = `Invalid id supplied`;
+                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
+                              if (responseBookController400_description_break == -1) {
+                                $("#examples-BookController-deleteBook-title-400").text("Status: 400 - " + responseBookController400_description);
+                              } else {
+                                $("#examples-BookController-deleteBook-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
+                                $("#examples-BookController-deleteBook-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-deleteBook-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-deleteBook-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
                             <h3 id="examples-BookController-deleteBook-title-204"></h3>
                             <p id="examples-BookController-deleteBook-description-204" class="marked"></p>
                             <script>
@@ -2277,50 +2316,6 @@ pub fn main() {
                                   <input id='responses-BookController-deleteBook-204-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
-                            <h3 id="examples-BookController-deleteBook-title-400"></h3>
-                            <p id="examples-BookController-deleteBook-description-400" class="marked"></p>
-                            <script>
-                              var responseBookController400_description = `Invalid id supplied`;
-                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
-                              if (responseBookController400_description_break == -1) {
-                                $("#examples-BookController-deleteBook-title-400").text("Status: 400 - " + responseBookController400_description);
-                              } else {
-                                $("#examples-BookController-deleteBook-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
-                                $("#examples-BookController-deleteBook-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-deleteBook-400" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-deleteBook-400-wrapper" style='margin-bottom: 10px;'>
-                            </div>
-                            <h3 id="examples-BookController-deleteBook-title-404"></h3>
-                            <p id="examples-BookController-deleteBook-description-404" class="marked"></p>
-                            <script>
-                              var responseBookController404_description = `Book not found`;
-                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
-                              if (responseBookController404_description_break == -1) {
-                                $("#examples-BookController-deleteBook-title-404").text("Status: 404 - " + responseBookController404_description);
-                              } else {
-                                $("#examples-BookController-deleteBook-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
-                                $("#examples-BookController-deleteBook-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-deleteBook-404" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-deleteBook-404-wrapper" style='margin-bottom: 10px;'>
-                            </div>
                         </article>
                       </div>
                       <hr>
@@ -2336,7 +2331,7 @@ pub fn main() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/books/{bookId}/comments/{id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/books/{bookId}/comments/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2358,7 +2353,7 @@ pub fn main() {
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-BookController-deleteComment-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X DELETE \
- "http://localhost:8080/books/{bookId}/comments/{id}"
+ "http://localhost:8080/api/v1/books/{bookId}/comments/{id}"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-BookController-deleteComment-0-java">
@@ -2619,28 +2614,6 @@ pub fn main() {
 
 
                           <h2>Responses</h2>
-                            <h3 id="examples-BookController-deleteComment-title-404"></h3>
-                            <p id="examples-BookController-deleteComment-description-404" class="marked"></p>
-                            <script>
-                              var responseBookController404_description = `Comment not found`;
-                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
-                              if (responseBookController404_description_break == -1) {
-                                $("#examples-BookController-deleteComment-title-404").text("Status: 404 - " + responseBookController404_description);
-                              } else {
-                                $("#examples-BookController-deleteComment-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
-                                $("#examples-BookController-deleteComment-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-deleteComment-404" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-deleteComment-404-wrapper" style='margin-bottom: 10px;'>
-                            </div>
                             <h3 id="examples-BookController-deleteComment-title-400"></h3>
                             <p id="examples-BookController-deleteComment-description-400" class="marked"></p>
                             <script>
@@ -2685,6 +2658,28 @@ pub fn main() {
 
                             <div class="tab-content" id="responses-BookController-deleteComment-204-wrapper" style='margin-bottom: 10px;'>
                             </div>
+                            <h3 id="examples-BookController-deleteComment-title-404"></h3>
+                            <p id="examples-BookController-deleteComment-description-404" class="marked"></p>
+                            <script>
+                              var responseBookController404_description = `Comment not found`;
+                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
+                              if (responseBookController404_description_break == -1) {
+                                $("#examples-BookController-deleteComment-title-404").text("Status: 404 - " + responseBookController404_description);
+                              } else {
+                                $("#examples-BookController-deleteComment-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
+                                $("#examples-BookController-deleteComment-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-deleteComment-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-deleteComment-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
                         </article>
                       </div>
                       <hr>
@@ -2700,7 +2695,7 @@ pub fn main() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/books/{id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/books/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -2723,7 +2718,7 @@ pub fn main() {
                           <div class="tab-pane active" id="examples-BookController-getBookById-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
  -H "Accept: */*" \
- "http://localhost:8080/books/{id}"
+ "http://localhost:8080/api/v1/books/{id}"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-BookController-getBookById-0-java">
@@ -2743,7 +2738,7 @@ public class BookControllerApiExample {
         Long id = 789; // Long | 
 
         try {
-            Book_BookDetail result = apiInstance.getBookById(id);
+            Book result = apiInstance.getBookById(id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling BookControllerApi#getBookById");
@@ -2763,7 +2758,7 @@ public class BookControllerApiExample {
         Long id = 789; // Long | 
 
         try {
-            Book_BookDetail result = apiInstance.getBookById(id);
+            Book result = apiInstance.getBookById(id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling BookControllerApi#getBookById");
@@ -2785,7 +2780,7 @@ Long *id = 789; //  (default to null)
 
 // Get a book by its id
 [apiInstance getBookByIdWith:id
-              completionHandler: ^(Book_BookDetail output, NSError* error) {
+              completionHandler: ^(Book output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
     }
@@ -2837,7 +2832,7 @@ namespace Example
 
             try {
                 // Get a book by its id
-                Book_BookDetail result = apiInstance.getBookById(id);
+                Book result = apiInstance.getBookById(id);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling BookControllerApi.getBookById: " + e.Message );
@@ -2960,6 +2955,50 @@ pub fn main() {
 
 
                           <h2>Responses</h2>
+                            <h3 id="examples-BookController-getBookById-title-404"></h3>
+                            <p id="examples-BookController-getBookById-description-404" class="marked"></p>
+                            <script>
+                              var responseBookController404_description = `Book not found`;
+                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
+                              if (responseBookController404_description_break == -1) {
+                                $("#examples-BookController-getBookById-title-404").text("Status: 404 - " + responseBookController404_description);
+                              } else {
+                                $("#examples-BookController-getBookById-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
+                                $("#examples-BookController-getBookById-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-getBookById-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-getBookById-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-BookController-getBookById-title-400"></h3>
+                            <p id="examples-BookController-getBookById-description-400" class="marked"></p>
+                            <script>
+                              var responseBookController400_description = `Invalid id supplied`;
+                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
+                              if (responseBookController400_description_break == -1) {
+                                $("#examples-BookController-getBookById-title-400").text("Status: 400 - " + responseBookController400_description);
+                              } else {
+                                $("#examples-BookController-getBookById-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
+                                $("#examples-BookController-getBookById-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-getBookById-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-getBookById-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
                             <h3 id="examples-BookController-getBookById-title-200"></h3>
                             <p id="examples-BookController-getBookById-description-200" class="marked"></p>
                             <script>
@@ -2995,7 +3034,7 @@ pub fn main() {
   "content" : {
     "*/*" : {
       "schema" : {
-        "$ref" : "#/components/schemas/Book_BookDetail"
+        "$ref" : "#/components/schemas/Book"
       }
     }
   }
@@ -3026,50 +3065,6 @@ pub fn main() {
                                   <input id='responses-BookController-getBookById-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
-                            <h3 id="examples-BookController-getBookById-title-400"></h3>
-                            <p id="examples-BookController-getBookById-description-400" class="marked"></p>
-                            <script>
-                              var responseBookController400_description = `Invalid id supplied`;
-                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
-                              if (responseBookController400_description_break == -1) {
-                                $("#examples-BookController-getBookById-title-400").text("Status: 400 - " + responseBookController400_description);
-                              } else {
-                                $("#examples-BookController-getBookById-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
-                                $("#examples-BookController-getBookById-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-getBookById-400" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-getBookById-400-wrapper" style='margin-bottom: 10px;'>
-                            </div>
-                            <h3 id="examples-BookController-getBookById-title-404"></h3>
-                            <p id="examples-BookController-getBookById-description-404" class="marked"></p>
-                            <script>
-                              var responseBookController404_description = `Book not found`;
-                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
-                              if (responseBookController404_description_break == -1) {
-                                $("#examples-BookController-getBookById-title-404").text("Status: 404 - " + responseBookController404_description);
-                              } else {
-                                $("#examples-BookController-getBookById-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
-                                $("#examples-BookController-getBookById-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-getBookById-404" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-getBookById-404-wrapper" style='margin-bottom: 10px;'>
-                            </div>
                         </article>
                       </div>
                       <hr>
@@ -3085,7 +3080,7 @@ pub fn main() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/books/</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/books/</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -3108,7 +3103,7 @@ pub fn main() {
                           <div class="tab-pane active" id="examples-BookController-getBooks-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
  -H "Accept: */*" \
- "http://localhost:8080/books/"
+ "http://localhost:8080/api/v1/books/"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-BookController-getBooks-0-java">
@@ -3127,7 +3122,7 @@ public class BookControllerApiExample {
         BookControllerApi apiInstance = new BookControllerApi();
 
         try {
-            array[Book_Basic] result = apiInstance.getBooks();
+            array[BookListResponseDTO] result = apiInstance.getBooks();
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling BookControllerApi#getBooks");
@@ -3146,7 +3141,7 @@ public class BookControllerApiExample {
         BookControllerApi apiInstance = new BookControllerApi();
 
         try {
-            array[Book_Basic] result = apiInstance.getBooks();
+            array[BookListResponseDTO] result = apiInstance.getBooks();
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling BookControllerApi#getBooks");
@@ -3167,7 +3162,7 @@ BookControllerApi *apiInstance = [[BookControllerApi alloc] init];
 
 // Get a list of books
 [apiInstance getBooksWithCompletionHandler: 
-              ^(array[Book_Basic] output, NSError* error) {
+              ^(array[BookListResponseDTO] output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
     }
@@ -3216,7 +3211,7 @@ namespace Example
 
             try {
                 // Get a list of books
-                array[Book_Basic] result = apiInstance.getBooks();
+                array[BookListResponseDTO] result = apiInstance.getBooks();
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling BookControllerApi.getBooks: " + e.Message );
@@ -3305,28 +3300,6 @@ pub fn main() {
 
 
                           <h2>Responses</h2>
-                            <h3 id="examples-BookController-getBooks-title-500"></h3>
-                            <p id="examples-BookController-getBooks-description-500" class="marked"></p>
-                            <script>
-                              var responseBookController500_description = `If a runtime error occurs while processing the request`;
-                              var responseBookController500_description_break = responseBookController500_description.indexOf('\n');
-                              if (responseBookController500_description_break == -1) {
-                                $("#examples-BookController-getBooks-title-500").text("Status: 500 - " + responseBookController500_description);
-                              } else {
-                                $("#examples-BookController-getBooks-title-500").text("Status: 500 - " + responseBookController500_description.substring(0, responseBookController500_description_break));
-                                $("#examples-BookController-getBooks-description-500").html(responseBookController500_description.substring(responseBookController500_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-BookController-getBooks-500" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-BookController-getBooks-500-wrapper" style='margin-bottom: 10px;'>
-                            </div>
                             <h3 id="examples-BookController-getBooks-title-200"></h3>
                             <p id="examples-BookController-getBooks-description-200" class="marked"></p>
                             <script>
@@ -3364,7 +3337,7 @@ pub fn main() {
       "schema" : {
         "type" : "array",
         "items" : {
-          "$ref" : "#/components/schemas/Book_Basic"
+          "$ref" : "#/components/schemas/BookListResponseDTO"
         }
       }
     }
@@ -3396,6 +3369,28 @@ pub fn main() {
                                   <input id='responses-BookController-getBooks-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
+                            <h3 id="examples-BookController-getBooks-title-500"></h3>
+                            <p id="examples-BookController-getBooks-description-500" class="marked"></p>
+                            <script>
+                              var responseBookController500_description = `If a runtime error occurs while processing the request`;
+                              var responseBookController500_description_break = responseBookController500_description.indexOf('\n');
+                              if (responseBookController500_description_break == -1) {
+                                $("#examples-BookController-getBooks-title-500").text("Status: 500 - " + responseBookController500_description);
+                              } else {
+                                $("#examples-BookController-getBooks-title-500").text("Status: 500 - " + responseBookController500_description.substring(0, responseBookController500_description_break));
+                                $("#examples-BookController-getBooks-description-500").html(responseBookController500_description.substring(responseBookController500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-BookController-getBooks-500" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-BookController-getBooks-500-wrapper" style='margin-bottom: 10px;'>
+                            </div>
                         </article>
                       </div>
                       <hr>
@@ -3411,7 +3406,7 @@ pub fn main() {
                         <p class="marked"></p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/books/{bookId}/comments/{id}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/books/{bookId}/comments/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -3434,7 +3429,7 @@ pub fn main() {
                           <div class="tab-pane active" id="examples-BookController-getCommentByBookAndId-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
  -H "Accept: */*" \
- "http://localhost:8080/books/{bookId}/comments/{id}"
+ "http://localhost:8080/api/v1/books/{bookId}/comments/{id}"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-BookController-getCommentByBookAndId-0-java">
@@ -3704,27 +3699,27 @@ pub fn main() {
 
 
                           <h2>Responses</h2>
-                            <h3 id="examples-BookController-getCommentByBookAndId-title-404"></h3>
-                            <p id="examples-BookController-getCommentByBookAndId-description-404" class="marked"></p>
+                            <h3 id="examples-BookController-getCommentByBookAndId-title-400"></h3>
+                            <p id="examples-BookController-getCommentByBookAndId-description-400" class="marked"></p>
                             <script>
-                              var responseBookController404_description = `Comment not found`;
-                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
-                              if (responseBookController404_description_break == -1) {
-                                $("#examples-BookController-getCommentByBookAndId-title-404").text("Status: 404 - " + responseBookController404_description);
+                              var responseBookController400_description = `Invalid id supplied`;
+                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
+                              if (responseBookController400_description_break == -1) {
+                                $("#examples-BookController-getCommentByBookAndId-title-400").text("Status: 400 - " + responseBookController400_description);
                               } else {
-                                $("#examples-BookController-getCommentByBookAndId-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
-                                $("#examples-BookController-getCommentByBookAndId-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
+                                $("#examples-BookController-getCommentByBookAndId-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
+                                $("#examples-BookController-getCommentByBookAndId-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
                               }
                             </script>
 
 
-                            <ul id="responses-detail-BookController-getCommentByBookAndId-404" class="nav nav-tabs nav-tabs-examples" >
+                            <ul id="responses-detail-BookController-getCommentByBookAndId-400" class="nav nav-tabs nav-tabs-examples" >
 
 
                             </ul>
 
 
-                            <div class="tab-content" id="responses-BookController-getCommentByBookAndId-404-wrapper" style='margin-bottom: 10px;'>
+                            <div class="tab-content" id="responses-BookController-getCommentByBookAndId-400-wrapper" style='margin-bottom: 10px;'>
                             </div>
                             <h3 id="examples-BookController-getCommentByBookAndId-title-200"></h3>
                             <p id="examples-BookController-getCommentByBookAndId-description-200" class="marked"></p>
@@ -3792,27 +3787,2355 @@ pub fn main() {
                                   <input id='responses-BookController-getCommentByBookAndId-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
-                            <h3 id="examples-BookController-getCommentByBookAndId-title-400"></h3>
-                            <p id="examples-BookController-getCommentByBookAndId-description-400" class="marked"></p>
+                            <h3 id="examples-BookController-getCommentByBookAndId-title-404"></h3>
+                            <p id="examples-BookController-getCommentByBookAndId-description-404" class="marked"></p>
                             <script>
-                              var responseBookController400_description = `Invalid id supplied`;
-                              var responseBookController400_description_break = responseBookController400_description.indexOf('\n');
-                              if (responseBookController400_description_break == -1) {
-                                $("#examples-BookController-getCommentByBookAndId-title-400").text("Status: 400 - " + responseBookController400_description);
+                              var responseBookController404_description = `Comment not found`;
+                              var responseBookController404_description_break = responseBookController404_description.indexOf('\n');
+                              if (responseBookController404_description_break == -1) {
+                                $("#examples-BookController-getCommentByBookAndId-title-404").text("Status: 404 - " + responseBookController404_description);
                               } else {
-                                $("#examples-BookController-getCommentByBookAndId-title-400").text("Status: 400 - " + responseBookController400_description.substring(0, responseBookController400_description_break));
-                                $("#examples-BookController-getCommentByBookAndId-description-400").html(responseBookController400_description.substring(responseBookController400_description_break));
+                                $("#examples-BookController-getCommentByBookAndId-title-404").text("Status: 404 - " + responseBookController404_description.substring(0, responseBookController404_description_break));
+                                $("#examples-BookController-getCommentByBookAndId-description-404").html(responseBookController404_description.substring(responseBookController404_description_break));
                               }
                             </script>
 
 
-                            <ul id="responses-detail-BookController-getCommentByBookAndId-400" class="nav nav-tabs nav-tabs-examples" >
+                            <ul id="responses-detail-BookController-getCommentByBookAndId-404" class="nav nav-tabs nav-tabs-examples" >
 
 
                             </ul>
 
 
-                            <div class="tab-content" id="responses-BookController-getCommentByBookAndId-400-wrapper" style='margin-bottom: 10px;'>
+                            <div class="tab-content" id="responses-BookController-getCommentByBookAndId-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                  </section>
+                <section id="api-UserController">
+                  <h1>UserController</h1>
+                    <div id="api-UserController-createUser">
+                      <article id="api-UserController-createUser-0" data-group="User" data-name="createUser" data-version="0">
+                        <div class="pull-left">
+                          <h1>createUser</h1>
+                          <p>Creates a new user</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/users/</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserController-createUser-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserController-createUser-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserController-createUser-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserController-createUser-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserController-createUser-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-python">Python</a></li>
+                          <li class=""><a href="#examples-UserController-createUser-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserController-createUser-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/users/" \
+ -d '{
+  &quot;nickname&quot; : &quot;nickname&quot;,
+  &quot;email&quot; : &quot;email&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserController-createUser-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.UserControllerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        UserControllerApi apiInstance = new UserControllerApi();
+        UserDTO userDTO = ; // UserDTO | 
+
+        try {
+            UserDTO result = apiInstance.createUser(userDTO);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#createUser");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserController-createUser-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.UserControllerApi;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+        UserControllerApi apiInstance = new UserControllerApi();
+        UserDTO userDTO = ; // UserDTO | 
+
+        try {
+            UserDTO result = apiInstance.createUser(userDTO);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#createUser");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserController-createUser-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserController-createUser-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+UserControllerApi *apiInstance = [[UserControllerApi alloc] init];
+UserDTO *userDTO = ; // 
+
+// Creates a new user
+[apiInstance createUserWith:userDTO
+              completionHandler: ^(UserDTO output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-createUser-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var BookApplicationApi = require('book_application_api');
+
+// Create an instance of the API class
+var api = new BookApplicationApi.UserControllerApi()
+var userDTO = ; // {UserDTO} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.createUser(userDTO, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserController-createUser-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserController-createUser-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class createUserExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new UserControllerApi();
+            var userDTO = new UserDTO(); // UserDTO | 
+
+            try {
+                // Creates a new user
+                UserDTO result = apiInstance.createUser(userDTO);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling UserControllerApi.createUser: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-createUser-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\UserControllerApi();
+$userDTO = ; // UserDTO | 
+
+try {
+    $result = $api_instance->createUser($userDTO);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserControllerApi->createUser: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-createUser-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::UserControllerApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::UserControllerApi->new();
+my $userDTO = WWW::OPenAPIClient::Object::UserDTO->new(); # UserDTO | 
+
+eval {
+    my $result = $api_instance->createUser(userDTO => $userDTO);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserControllerApi->createUser: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-createUser-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.UserControllerApi()
+userDTO =  # UserDTO | 
+
+try:
+    # Creates a new user
+    api_response = api_instance.create_user(userDTO)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserControllerApi->createUser: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-createUser-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate UserControllerApi;
+
+pub fn main() {
+    let userDTO = ; // UserDTO
+
+    let mut context = UserControllerApi::Context::default();
+    let result = client.createUser(userDTO, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userDTO <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserDTO"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_createUser_userDTO');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_createUser_userDTO"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-UserController-createUser-title-200"></h3>
+                            <p id="examples-UserController-createUser-description-200" class="marked"></p>
+                            <script>
+                              var responseUserController200_description = `If the user has been created successfully`;
+                              var responseUserController200_description_break = responseUserController200_description.indexOf('\n');
+                              if (responseUserController200_description_break == -1) {
+                                $("#examples-UserController-createUser-title-200").text("Status: 200 - " + responseUserController200_description);
+                              } else {
+                                $("#examples-UserController-createUser-title-200").text("Status: 200 - " + responseUserController200_description.substring(0, responseUserController200_description_break));
+                                $("#examples-UserController-createUser-description-200").html(responseUserController200_description.substring(responseUserController200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-createUser-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-UserController-createUser-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-createUser-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-UserController-createUser-200-schema">
+                                  <div id="responses-UserController-createUser-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "If the user has been created successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserDTO"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-UserController-createUser-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-UserController-createUser-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-UserController-createUser-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-UserController-createUser-title-500"></h3>
+                            <p id="examples-UserController-createUser-description-500" class="marked"></p>
+                            <script>
+                              var responseUserController500_description = `If a runtime error occurs while processing the request`;
+                              var responseUserController500_description_break = responseUserController500_description.indexOf('\n');
+                              if (responseUserController500_description_break == -1) {
+                                $("#examples-UserController-createUser-title-500").text("Status: 500 - " + responseUserController500_description);
+                              } else {
+                                $("#examples-UserController-createUser-title-500").text("Status: 500 - " + responseUserController500_description.substring(0, responseUserController500_description_break));
+                                $("#examples-UserController-createUser-description-500").html(responseUserController500_description.substring(responseUserController500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-createUser-500" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-createUser-500-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-UserController-createUser-title-400"></h3>
+                            <p id="examples-UserController-createUser-description-400" class="marked"></p>
+                            <script>
+                              var responseUserController400_description = `If one or more request parameters don't comply with the specification`;
+                              var responseUserController400_description_break = responseUserController400_description.indexOf('\n');
+                              if (responseUserController400_description_break == -1) {
+                                $("#examples-UserController-createUser-title-400").text("Status: 400 - " + responseUserController400_description);
+                              } else {
+                                $("#examples-UserController-createUser-title-400").text("Status: 400 - " + responseUserController400_description.substring(0, responseUserController400_description_break));
+                                $("#examples-UserController-createUser-description-400").html(responseUserController400_description.substring(responseUserController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-createUser-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-createUser-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-UserController-deleteUser">
+                      <article id="api-UserController-deleteUser-0" data-group="User" data-name="deleteUser" data-version="0">
+                        <div class="pull-left">
+                          <h1>deleteUser</h1>
+                          <p>Delete a user by its id</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/api/v1/users/{username}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserController-deleteUser-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserController-deleteUser-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserController-deleteUser-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserController-deleteUser-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserController-deleteUser-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-python">Python</a></li>
+                          <li class=""><a href="#examples-UserController-deleteUser-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserController-deleteUser-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE \
+ -H "Accept: application/json" \
+ "http://localhost:8080/api/v1/users/{username}"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserController-deleteUser-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.UserControllerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        UserControllerApi apiInstance = new UserControllerApi();
+        String username = username_example; // String | 
+
+        try {
+            UserDTO result = apiInstance.deleteUser(username);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#deleteUser");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserController-deleteUser-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.UserControllerApi;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+        UserControllerApi apiInstance = new UserControllerApi();
+        String username = username_example; // String | 
+
+        try {
+            UserDTO result = apiInstance.deleteUser(username);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#deleteUser");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserController-deleteUser-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+UserControllerApi *apiInstance = [[UserControllerApi alloc] init];
+String *username = username_example; //  (default to null)
+
+// Delete a user by its id
+[apiInstance deleteUserWith:username
+              completionHandler: ^(UserDTO output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var BookApplicationApi = require('book_application_api');
+
+// Create an instance of the API class
+var api = new BookApplicationApi.UserControllerApi()
+var username = username_example; // {String} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.deleteUser(username, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserController-deleteUser-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class deleteUserExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new UserControllerApi();
+            var username = username_example;  // String |  (default to null)
+
+            try {
+                // Delete a user by its id
+                UserDTO result = apiInstance.deleteUser(username);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling UserControllerApi.deleteUser: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\UserControllerApi();
+$username = username_example; // String | 
+
+try {
+    $result = $api_instance->deleteUser($username);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserControllerApi->deleteUser: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::UserControllerApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::UserControllerApi->new();
+my $username = username_example; # String | 
+
+eval {
+    my $result = $api_instance->deleteUser(username => $username);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserControllerApi->deleteUser: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.UserControllerApi()
+username = username_example # String |  (default to null)
+
+try:
+    # Delete a user by its id
+    api_response = api_instance.delete_user(username)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserControllerApi->deleteUser: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-deleteUser-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate UserControllerApi;
+
+pub fn main() {
+    let username = username_example; // String
+
+    let mut context = UserControllerApi::Context::default();
+    let result = client.deleteUser(username, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">username*</td>
+<td>
+
+
+    <div id="d2e199_deleteUser_username">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-UserController-deleteUser-title-204"></h3>
+                            <p id="examples-UserController-deleteUser-description-204" class="marked"></p>
+                            <script>
+                              var responseUserController204_description = `If the user has been deleted successfully`;
+                              var responseUserController204_description_break = responseUserController204_description.indexOf('\n');
+                              if (responseUserController204_description_break == -1) {
+                                $("#examples-UserController-deleteUser-title-204").text("Status: 204 - " + responseUserController204_description);
+                              } else {
+                                $("#examples-UserController-deleteUser-title-204").text("Status: 204 - " + responseUserController204_description.substring(0, responseUserController204_description_break));
+                                $("#examples-UserController-deleteUser-description-204").html(responseUserController204_description.substring(responseUserController204_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-deleteUser-204" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-UserController-deleteUser-204-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-deleteUser-204-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-UserController-deleteUser-204-schema">
+                                  <div id="responses-UserController-deleteUser-schema-204" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "If the user has been deleted successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserDTO"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-UserController-deleteUser-204-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-UserController-deleteUser-schema-204');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-UserController-deleteUser-204-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-UserController-deleteUser-title-400"></h3>
+                            <p id="examples-UserController-deleteUser-description-400" class="marked"></p>
+                            <script>
+                              var responseUserController400_description = `Invalid id supplied`;
+                              var responseUserController400_description_break = responseUserController400_description.indexOf('\n');
+                              if (responseUserController400_description_break == -1) {
+                                $("#examples-UserController-deleteUser-title-400").text("Status: 400 - " + responseUserController400_description);
+                              } else {
+                                $("#examples-UserController-deleteUser-title-400").text("Status: 400 - " + responseUserController400_description.substring(0, responseUserController400_description_break));
+                                $("#examples-UserController-deleteUser-description-400").html(responseUserController400_description.substring(responseUserController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-deleteUser-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-deleteUser-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-UserController-deleteUser-title-404"></h3>
+                            <p id="examples-UserController-deleteUser-description-404" class="marked"></p>
+                            <script>
+                              var responseUserController404_description = `user not found`;
+                              var responseUserController404_description_break = responseUserController404_description.indexOf('\n');
+                              if (responseUserController404_description_break == -1) {
+                                $("#examples-UserController-deleteUser-title-404").text("Status: 404 - " + responseUserController404_description);
+                              } else {
+                                $("#examples-UserController-deleteUser-title-404").text("Status: 404 - " + responseUserController404_description.substring(0, responseUserController404_description_break));
+                                $("#examples-UserController-deleteUser-description-404").html(responseUserController404_description.substring(responseUserController404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-deleteUser-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-deleteUser-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-UserController-getCommentsByUserId">
+                      <article id="api-UserController-getCommentsByUserId-0" data-group="User" data-name="getCommentsByUserId" data-version="0">
+                        <div class="pull-left">
+                          <h1>getCommentsByUserId</h1>
+                          <p>Get all the comments from a user</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/users/{userId}/comments</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserController-getCommentsByUserId-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserController-getCommentsByUserId-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserController-getCommentsByUserId-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-python">Python</a></li>
+                          <li class=""><a href="#examples-UserController-getCommentsByUserId-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserController-getCommentsByUserId-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+ -H "Accept: */*" \
+ "http://localhost:8080/api/v1/users/{userId}/comments"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.UserControllerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        UserControllerApi apiInstance = new UserControllerApi();
+        String userId = userId_example; // String | 
+
+        try {
+            set[CommentDTO] result = apiInstance.getCommentsByUserId(userId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#getCommentsByUserId");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.UserControllerApi;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+        UserControllerApi apiInstance = new UserControllerApi();
+        String userId = userId_example; // String | 
+
+        try {
+            set[CommentDTO] result = apiInstance.getCommentsByUserId(userId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#getCommentsByUserId");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+UserControllerApi *apiInstance = [[UserControllerApi alloc] init];
+String *userId = userId_example; //  (default to null)
+
+// Get all the comments from a user
+[apiInstance getCommentsByUserIdWith:userId
+              completionHandler: ^(set[CommentDTO] output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var BookApplicationApi = require('book_application_api');
+
+// Create an instance of the API class
+var api = new BookApplicationApi.UserControllerApi()
+var userId = userId_example; // {String} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getCommentsByUserId(userId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getCommentsByUserIdExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new UserControllerApi();
+            var userId = userId_example;  // String |  (default to null)
+
+            try {
+                // Get all the comments from a user
+                set[CommentDTO] result = apiInstance.getCommentsByUserId(userId);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling UserControllerApi.getCommentsByUserId: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\UserControllerApi();
+$userId = userId_example; // String | 
+
+try {
+    $result = $api_instance->getCommentsByUserId($userId);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserControllerApi->getCommentsByUserId: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::UserControllerApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::UserControllerApi->new();
+my $userId = userId_example; # String | 
+
+eval {
+    my $result = $api_instance->getCommentsByUserId(userId => $userId);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserControllerApi->getCommentsByUserId: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.UserControllerApi()
+userId = userId_example # String |  (default to null)
+
+try:
+    # Get all the comments from a user
+    api_response = api_instance.get_comments_by_user_id(userId)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserControllerApi->getCommentsByUserId: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getCommentsByUserId-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate UserControllerApi;
+
+pub fn main() {
+    let userId = userId_example; // String
+
+    let mut context = UserControllerApi::Context::default();
+    let result = client.getCommentsByUserId(userId, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">userId*</td>
+<td>
+
+
+    <div id="d2e199_getCommentsByUserId_userId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-UserController-getCommentsByUserId-title-400"></h3>
+                            <p id="examples-UserController-getCommentsByUserId-description-400" class="marked"></p>
+                            <script>
+                              var responseUserController400_description = `Invalid id supplied`;
+                              var responseUserController400_description_break = responseUserController400_description.indexOf('\n');
+                              if (responseUserController400_description_break == -1) {
+                                $("#examples-UserController-getCommentsByUserId-title-400").text("Status: 400 - " + responseUserController400_description);
+                              } else {
+                                $("#examples-UserController-getCommentsByUserId-title-400").text("Status: 400 - " + responseUserController400_description.substring(0, responseUserController400_description_break));
+                                $("#examples-UserController-getCommentsByUserId-description-400").html(responseUserController400_description.substring(responseUserController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getCommentsByUserId-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getCommentsByUserId-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-UserController-getCommentsByUserId-title-200"></h3>
+                            <p id="examples-UserController-getCommentsByUserId-description-200" class="marked"></p>
+                            <script>
+                              var responseUserController200_description = `Found the comments`;
+                              var responseUserController200_description_break = responseUserController200_description.indexOf('\n');
+                              if (responseUserController200_description_break == -1) {
+                                $("#examples-UserController-getCommentsByUserId-title-200").text("Status: 200 - " + responseUserController200_description);
+                              } else {
+                                $("#examples-UserController-getCommentsByUserId-title-200").text("Status: 200 - " + responseUserController200_description.substring(0, responseUserController200_description_break));
+                                $("#examples-UserController-getCommentsByUserId-description-200").html(responseUserController200_description.substring(responseUserController200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getCommentsByUserId-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-UserController-getCommentsByUserId-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getCommentsByUserId-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-UserController-getCommentsByUserId-200-schema">
+                                  <div id="responses-UserController-getCommentsByUserId-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Found the comments",
+  "content" : {
+    "*/*" : {
+      "schema" : {
+        "uniqueItems" : true,
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/CommentDTO"
+        }
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-UserController-getCommentsByUserId-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-UserController-getCommentsByUserId-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-UserController-getCommentsByUserId-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-UserController-getCommentsByUserId-title-404"></h3>
+                            <p id="examples-UserController-getCommentsByUserId-description-404" class="marked"></p>
+                            <script>
+                              var responseUserController404_description = `Comment not found`;
+                              var responseUserController404_description_break = responseUserController404_description.indexOf('\n');
+                              if (responseUserController404_description_break == -1) {
+                                $("#examples-UserController-getCommentsByUserId-title-404").text("Status: 404 - " + responseUserController404_description);
+                              } else {
+                                $("#examples-UserController-getCommentsByUserId-title-404").text("Status: 404 - " + responseUserController404_description.substring(0, responseUserController404_description_break));
+                                $("#examples-UserController-getCommentsByUserId-description-404").html(responseUserController404_description.substring(responseUserController404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getCommentsByUserId-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getCommentsByUserId-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-UserController-getUserById">
+                      <article id="api-UserController-getUserById-0" data-group="User" data-name="getUserById" data-version="0">
+                        <div class="pull-left">
+                          <h1>getUserById</h1>
+                          <p>Get a user by its id</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/users/{username}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserController-getUserById-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserController-getUserById-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserController-getUserById-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserController-getUserById-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserController-getUserById-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-python">Python</a></li>
+                          <li class=""><a href="#examples-UserController-getUserById-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserController-getUserById-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+ -H "Accept: */*" \
+ "http://localhost:8080/api/v1/users/{username}"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserController-getUserById-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.UserControllerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        UserControllerApi apiInstance = new UserControllerApi();
+        String username = username_example; // String | 
+
+        try {
+            UserDTO result = apiInstance.getUserById(username);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#getUserById");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserController-getUserById-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.UserControllerApi;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+        UserControllerApi apiInstance = new UserControllerApi();
+        String username = username_example; // String | 
+
+        try {
+            UserDTO result = apiInstance.getUserById(username);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#getUserById");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserController-getUserById-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+UserControllerApi *apiInstance = [[UserControllerApi alloc] init];
+String *username = username_example; //  (default to null)
+
+// Get a user by its id
+[apiInstance getUserByIdWith:username
+              completionHandler: ^(UserDTO output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var BookApplicationApi = require('book_application_api');
+
+// Create an instance of the API class
+var api = new BookApplicationApi.UserControllerApi()
+var username = username_example; // {String} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getUserById(username, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserController-getUserById-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getUserByIdExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new UserControllerApi();
+            var username = username_example;  // String |  (default to null)
+
+            try {
+                // Get a user by its id
+                UserDTO result = apiInstance.getUserById(username);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling UserControllerApi.getUserById: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\UserControllerApi();
+$username = username_example; // String | 
+
+try {
+    $result = $api_instance->getUserById($username);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserControllerApi->getUserById: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::UserControllerApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::UserControllerApi->new();
+my $username = username_example; # String | 
+
+eval {
+    my $result = $api_instance->getUserById(username => $username);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserControllerApi->getUserById: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.UserControllerApi()
+username = username_example # String |  (default to null)
+
+try:
+    # Get a user by its id
+    api_response = api_instance.get_user_by_id(username)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserControllerApi->getUserById: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUserById-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate UserControllerApi;
+
+pub fn main() {
+    let username = username_example; // String
+
+    let mut context = UserControllerApi::Context::default();
+    let result = client.getUserById(username, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">username*</td>
+<td>
+
+
+    <div id="d2e199_getUserById_username">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-UserController-getUserById-title-400"></h3>
+                            <p id="examples-UserController-getUserById-description-400" class="marked"></p>
+                            <script>
+                              var responseUserController400_description = `Invalid id supplied`;
+                              var responseUserController400_description_break = responseUserController400_description.indexOf('\n');
+                              if (responseUserController400_description_break == -1) {
+                                $("#examples-UserController-getUserById-title-400").text("Status: 400 - " + responseUserController400_description);
+                              } else {
+                                $("#examples-UserController-getUserById-title-400").text("Status: 400 - " + responseUserController400_description.substring(0, responseUserController400_description_break));
+                                $("#examples-UserController-getUserById-description-400").html(responseUserController400_description.substring(responseUserController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getUserById-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getUserById-400-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-UserController-getUserById-title-200"></h3>
+                            <p id="examples-UserController-getUserById-description-200" class="marked"></p>
+                            <script>
+                              var responseUserController200_description = `Found the user`;
+                              var responseUserController200_description_break = responseUserController200_description.indexOf('\n');
+                              if (responseUserController200_description_break == -1) {
+                                $("#examples-UserController-getUserById-title-200").text("Status: 200 - " + responseUserController200_description);
+                              } else {
+                                $("#examples-UserController-getUserById-title-200").text("Status: 200 - " + responseUserController200_description.substring(0, responseUserController200_description_break));
+                                $("#examples-UserController-getUserById-description-200").html(responseUserController200_description.substring(responseUserController200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getUserById-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-UserController-getUserById-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getUserById-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-UserController-getUserById-200-schema">
+                                  <div id="responses-UserController-getUserById-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Found the user",
+  "content" : {
+    "*/*" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserDTO"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-UserController-getUserById-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-UserController-getUserById-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-UserController-getUserById-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-UserController-getUserById-title-404"></h3>
+                            <p id="examples-UserController-getUserById-description-404" class="marked"></p>
+                            <script>
+                              var responseUserController404_description = `user not found`;
+                              var responseUserController404_description_break = responseUserController404_description.indexOf('\n');
+                              if (responseUserController404_description_break == -1) {
+                                $("#examples-UserController-getUserById-title-404").text("Status: 404 - " + responseUserController404_description);
+                              } else {
+                                $("#examples-UserController-getUserById-title-404").text("Status: 404 - " + responseUserController404_description.substring(0, responseUserController404_description_break));
+                                $("#examples-UserController-getUserById-description-404").html(responseUserController404_description.substring(responseUserController404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getUserById-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getUserById-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-UserController-getUsers">
+                      <article id="api-UserController-getUsers-0" data-group="User" data-name="getUsers" data-version="0">
+                        <div class="pull-left">
+                          <h1>getUsers</h1>
+                          <p>Get a list of users</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/users/</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserController-getUsers-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserController-getUsers-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserController-getUsers-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserController-getUsers-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserController-getUsers-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-python">Python</a></li>
+                          <li class=""><a href="#examples-UserController-getUsers-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserController-getUsers-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+ -H "Accept: */*" \
+ "http://localhost:8080/api/v1/users/"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserController-getUsers-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.UserControllerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        UserControllerApi apiInstance = new UserControllerApi();
+
+        try {
+            array[UserDTO] result = apiInstance.getUsers();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#getUsers");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserController-getUsers-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.UserControllerApi;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+        UserControllerApi apiInstance = new UserControllerApi();
+
+        try {
+            array[UserDTO] result = apiInstance.getUsers();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#getUsers");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserController-getUsers-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+UserControllerApi *apiInstance = [[UserControllerApi alloc] init];
+
+// Get a list of users
+[apiInstance getUsersWithCompletionHandler: 
+              ^(array[UserDTO] output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var BookApplicationApi = require('book_application_api');
+
+// Create an instance of the API class
+var api = new BookApplicationApi.UserControllerApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getUsers(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserController-getUsers-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getUsersExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new UserControllerApi();
+
+            try {
+                // Get a list of users
+                array[UserDTO] result = apiInstance.getUsers();
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling UserControllerApi.getUsers: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\UserControllerApi();
+
+try {
+    $result = $api_instance->getUsers();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserControllerApi->getUsers: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::UserControllerApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::UserControllerApi->new();
+
+eval {
+    my $result = $api_instance->getUsers();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserControllerApi->getUsers: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.UserControllerApi()
+
+try:
+    # Get a list of users
+    api_response = api_instance.get_users()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserControllerApi->getUsers: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-getUsers-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate UserControllerApi;
+
+pub fn main() {
+
+    let mut context = UserControllerApi::Context::default();
+    let result = client.getUsers(&context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-UserController-getUsers-title-200"></h3>
+                            <p id="examples-UserController-getUsers-description-200" class="marked"></p>
+                            <script>
+                              var responseUserController200_description = `Returns the list of users`;
+                              var responseUserController200_description_break = responseUserController200_description.indexOf('\n');
+                              if (responseUserController200_description_break == -1) {
+                                $("#examples-UserController-getUsers-title-200").text("Status: 200 - " + responseUserController200_description);
+                              } else {
+                                $("#examples-UserController-getUsers-title-200").text("Status: 200 - " + responseUserController200_description.substring(0, responseUserController200_description_break));
+                                $("#examples-UserController-getUsers-description-200").html(responseUserController200_description.substring(responseUserController200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getUsers-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-UserController-getUsers-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getUsers-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-UserController-getUsers-200-schema">
+                                  <div id="responses-UserController-getUsers-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Returns the list of users",
+  "content" : {
+    "*/*" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/UserDTO"
+        }
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-UserController-getUsers-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-UserController-getUsers-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-UserController-getUsers-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-UserController-getUsers-title-500"></h3>
+                            <p id="examples-UserController-getUsers-description-500" class="marked"></p>
+                            <script>
+                              var responseUserController500_description = `If a runtime error occurs while processing the request`;
+                              var responseUserController500_description_break = responseUserController500_description.indexOf('\n');
+                              if (responseUserController500_description_break == -1) {
+                                $("#examples-UserController-getUsers-title-500").text("Status: 500 - " + responseUserController500_description);
+                              } else {
+                                $("#examples-UserController-getUsers-title-500").text("Status: 500 - " + responseUserController500_description.substring(0, responseUserController500_description_break));
+                                $("#examples-UserController-getUsers-description-500").html(responseUserController500_description.substring(responseUserController500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-getUsers-500" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-getUsers-500-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-UserController-updateUser">
+                      <article id="api-UserController-updateUser-0" data-group="User" data-name="updateUser" data-version="0">
+                        <div class="pull-left">
+                          <h1>updateUser</h1>
+                          <p>Updates a user</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/api/v1/users/{username}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserController-updateUser-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserController-updateUser-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserController-updateUser-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserController-updateUser-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserController-updateUser-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-python">Python</a></li>
+                          <li class=""><a href="#examples-UserController-updateUser-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserController-updateUser-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8080/api/v1/users/{username}" \
+ -d '{
+  &quot;nickname&quot; : &quot;nickname&quot;,
+  &quot;email&quot; : &quot;email&quot;
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserController-updateUser-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.UserControllerApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        UserControllerApi apiInstance = new UserControllerApi();
+        String username = username_example; // String | 
+        UserDTO userDTO = ; // UserDTO | 
+
+        try {
+            UserDTO result = apiInstance.updateUser(username, userDTO);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#updateUser");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserController-updateUser-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.UserControllerApi;
+
+public class UserControllerApiExample {
+    public static void main(String[] args) {
+        UserControllerApi apiInstance = new UserControllerApi();
+        String username = username_example; // String | 
+        UserDTO userDTO = ; // UserDTO | 
+
+        try {
+            UserDTO result = apiInstance.updateUser(username, userDTO);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserControllerApi#updateUser");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserController-updateUser-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+UserControllerApi *apiInstance = [[UserControllerApi alloc] init];
+String *username = username_example; //  (default to null)
+UserDTO *userDTO = ; // 
+
+// Updates a user
+[apiInstance updateUserWith:username
+    userDTO:userDTO
+              completionHandler: ^(UserDTO output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var BookApplicationApi = require('book_application_api');
+
+// Create an instance of the API class
+var api = new BookApplicationApi.UserControllerApi()
+var username = username_example; // {String} 
+var userDTO = ; // {UserDTO} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.updateUser(username, userDTO, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserController-updateUser-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class updateUserExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new UserControllerApi();
+            var username = username_example;  // String |  (default to null)
+            var userDTO = new UserDTO(); // UserDTO | 
+
+            try {
+                // Updates a user
+                UserDTO result = apiInstance.updateUser(username, userDTO);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling UserControllerApi.updateUser: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\UserControllerApi();
+$username = username_example; // String | 
+$userDTO = ; // UserDTO | 
+
+try {
+    $result = $api_instance->updateUser($username, $userDTO);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserControllerApi->updateUser: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::UserControllerApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::UserControllerApi->new();
+my $username = username_example; # String | 
+my $userDTO = WWW::OPenAPIClient::Object::UserDTO->new(); # UserDTO | 
+
+eval {
+    my $result = $api_instance->updateUser(username => $username, userDTO => $userDTO);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserControllerApi->updateUser: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.UserControllerApi()
+username = username_example # String |  (default to null)
+userDTO =  # UserDTO | 
+
+try:
+    # Updates a user
+    api_response = api_instance.update_user(username, userDTO)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserControllerApi->updateUser: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserController-updateUser-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate UserControllerApi;
+
+pub fn main() {
+    let username = username_example; // String
+    let userDTO = ; // UserDTO
+
+    let mut context = UserControllerApi::Context::default();
+    let result = client.updateUser(username, userDTO, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">username*</td>
+<td>
+
+
+    <div id="d2e199_updateUser_username">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">userDTO <span style="color:red;">*</span></td>
+<td>
+<p class="marked"></p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserDTO"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_updateUser_userDTO');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_updateUser_userDTO"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-UserController-updateUser-title-200"></h3>
+                            <p id="examples-UserController-updateUser-description-200" class="marked"></p>
+                            <script>
+                              var responseUserController200_description = `If the user has been created successfully`;
+                              var responseUserController200_description_break = responseUserController200_description.indexOf('\n');
+                              if (responseUserController200_description_break == -1) {
+                                $("#examples-UserController-updateUser-title-200").text("Status: 200 - " + responseUserController200_description);
+                              } else {
+                                $("#examples-UserController-updateUser-title-200").text("Status: 200 - " + responseUserController200_description.substring(0, responseUserController200_description_break));
+                                $("#examples-UserController-updateUser-description-200").html(responseUserController200_description.substring(responseUserController200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-updateUser-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-UserController-updateUser-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-updateUser-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-UserController-updateUser-200-schema">
+                                  <div id="responses-UserController-updateUser-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "If the user has been created successfully",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserDTO"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-UserController-updateUser-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-UserController-updateUser-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-UserController-updateUser-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-UserController-updateUser-title-500"></h3>
+                            <p id="examples-UserController-updateUser-description-500" class="marked"></p>
+                            <script>
+                              var responseUserController500_description = `If a runtime error occurs while processing the request`;
+                              var responseUserController500_description_break = responseUserController500_description.indexOf('\n');
+                              if (responseUserController500_description_break == -1) {
+                                $("#examples-UserController-updateUser-title-500").text("Status: 500 - " + responseUserController500_description);
+                              } else {
+                                $("#examples-UserController-updateUser-title-500").text("Status: 500 - " + responseUserController500_description.substring(0, responseUserController500_description_break));
+                                $("#examples-UserController-updateUser-description-500").html(responseUserController500_description.substring(responseUserController500_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-updateUser-500" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-updateUser-500-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-UserController-updateUser-title-400"></h3>
+                            <p id="examples-UserController-updateUser-description-400" class="marked"></p>
+                            <script>
+                              var responseUserController400_description = `If one or more request parameters don't comply with the specification`;
+                              var responseUserController400_description_break = responseUserController400_description.indexOf('\n');
+                              if (responseUserController400_description_break == -1) {
+                                $("#examples-UserController-updateUser-title-400").text("Status: 400 - " + responseUserController400_description);
+                              } else {
+                                $("#examples-UserController-updateUser-title-400").text("Status: 400 - " + responseUserController400_description.substring(0, responseUserController400_description_break));
+                                $("#examples-UserController-updateUser-description-400").html(responseUserController400_description.substring(responseUserController400_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-UserController-updateUser-400" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-UserController-updateUser-400-wrapper" style='margin-bottom: 10px;'>
                             </div>
                         </article>
                       </div>

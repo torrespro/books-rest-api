@@ -1,6 +1,5 @@
 package es.torres.books.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Objects;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -9,19 +8,13 @@ import javax.validation.constraints.Size;
 
 public class Comment {
 
-    public interface Basic {};
-
-    @JsonView(Basic.class)
     private Long id;
-    @JsonView(Basic.class)
     @NotBlank
     @Size(min = 2, max = 20, message = "username should have at least 2 characters and not more than 20")
     private String username;
-    @JsonView(Basic.class)
     @NotBlank
     @Size(min = 3, max = 200, message = "comments should have at least 2 characters and not more than 200")
     private String text;
-    @JsonView(Basic.class)
     @Min(0)
     @Max(5)
     private Short rating;

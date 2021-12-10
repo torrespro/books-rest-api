@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Get the list of books",
+			"name": "Get the list of users",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -24,12 +24,215 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/books/",
+					"raw": "localhost:8080/api/v1/users/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nickname\": \"torres\",\n    \"email\": \"correo@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/users/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"otrocorreo@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/users/torres",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"torres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"otrocorreo@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/users/torres",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"torres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Comments from a User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"otrocorreo@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/users/juan/comments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"juan",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"otrocorreo@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/users/torres",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"torres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get the list of books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/books/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
 						"books",
 						""
 					]
@@ -43,9 +246,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "29167c97-32e3-41ac-bcbe-82168995e0b5",
 						"exec": [
 							"pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+							"const jsonData = pm.response.json();",
+							"pm.test(\"Test data type of the response\", () => {",
+							"  pm.expect(jsonData).to.be.an(\"object\");",
+							"  pm.expect(jsonData.id).to.be.a(\"number\");",
+							"});",
 							"pm.test(\"Location header is present\", () => {",
 							"  pm.response.to.have.header(\"Location\");",
 							"});"
@@ -59,7 +266,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"author\": null,\n    \"published_year\": null,\n    \"publisher\": null,\n    \"summary\": null,\n    \"title\": \"El Quijote\"\n}",
+					"raw": "{\n    \"author\": \"Octavio Prohaska DVM\",\n    \"publicationYear\": 1973,\n    \"publisher\": \"Ego Dominus Tuus\",\n    \"summary\": \"Eius provident repellendus ea quis non deserunt. Perspiciatis consequatur quisquam distinctio et et voluptatem qui. Aperiam quos nam repudiandae eaque voluptatem facere corporis.\",\n    \"title\": \"Have His Carcase\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,12 +274,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/books/",
+					"raw": "localhost:8080/api/v1/books/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						""
 					]
@@ -145,7 +354,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4d4c767d-bfb0-4ce5-ab81-eaed66927e9d",
 						"exec": [
 							"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
 							"const jsonData = pm.response.json();",
@@ -171,12 +379,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/books/",
+					"raw": "localhost:8080/api/v1/books/",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						""
 					]
@@ -249,9 +459,39 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2e90c306-539a-41cb-ae11-0f78850c5a2e",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });"
+							"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+							"/* response has this structure:",
+							"{",
+							"    \"author\": \"Octavio Prohaska DVM\",",
+							"    \"comments\": [",
+							"        {",
+							"            \"id\": 1,",
+							"            \"rating\": 4,",
+							"            \"text\": \"Commodi voluptatem provident veritatis consequatur.\",",
+							"            \"username\": \"Colene Brakus\"",
+							"        },",
+							"        {",
+							"            \"id\": 2,",
+							"            \"rating\": 5,",
+							"            \"text\": \"Et nihil a vel quibusdam officiis quia.\",",
+							"            \"username\": \"Boris Padberg\"",
+							"        }",
+							"    ],",
+							"    \"id\": 2,",
+							"    \"published_year\": 1973,",
+							"    \"publisher\": \"Ego Dominus Tuus\",",
+							"    \"summary\": \"Eius provident repellendus ea quis non deserunt. Perspiciatis consequatur quisquam distinctio et et voluptatem qui. Aperiam quos nam repudiandae eaque voluptatem facere corporis.\",",
+							"    \"title\": \"Have His Carcase\"",
+							"}",
+							"*/",
+							"const jsonData = pm.response.json();",
+							"pm.test(\"Test data type of the response\", () => {",
+							"  pm.expect(jsonData).to.be.an(\"object\");",
+							"  pm.expect(jsonData.id).to.be.a(\"number\");",
+							"  pm.expect(jsonData.title).to.be.a(\"string\");",
+							"  pm.expect(jsonData.comments).to.be.an(\"array\");",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -261,12 +501,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/books/1",
+					"raw": "localhost:8080/api/v1/books/1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1"
 					]
@@ -280,7 +522,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a89661e0-b4d0-46a6-a189-3097b6aeb33e",
 						"exec": [
 							"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
 							"const jsonData = pm.response.json();",
@@ -297,12 +538,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/books/99999",
+					"raw": "localhost:8080/api/v1/books/99999",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"99999"
 					]
@@ -316,7 +559,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "eba644b9-a398-49f8-bbe5-0f5ba1c6d521",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });"
 						],
@@ -328,12 +570,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/books/1/comments/1",
+					"raw": "localhost:8080/api/v1/books/1/comments/1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1",
 						"comments",
@@ -349,7 +593,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e36a33bf-8168-40da-bd7e-95b2e8e48872",
 						"exec": [
 							"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
 							"const jsonData = pm.response.json();",
@@ -366,12 +609,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/books/1/comments/99999",
+					"raw": "localhost:8080/api/v1/books/1/comments/99999",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1",
 						"comments",
@@ -387,7 +632,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fd3bb4a1-fb72-46fd-af7c-2b2d384fe184",
 						"exec": [
 							"pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
 							"const jsonData = pm.response.json();",
@@ -410,7 +654,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"rating\": 3,\n\"text\": \"comment\",\n\"username\": \"username\"\n}",
+					"raw": "{\n\"rating\": 3,\n\"text\": \"comment bueno\",\n\"username\": \"juan\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -418,12 +662,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/books/1/comments",
+					"raw": "localhost:8080/api/v1/books/1/comments",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1",
 						"comments"
@@ -498,18 +744,12 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e149c6fc-e7cb-4a8f-a678-5a8df6365d78",
 						"exec": [
-							"pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+							"pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });",
 							"const jsonData = pm.response.json();",
-							"pm.test(\"Test data type of the response\", () => {",
+							"pm.test(\"Test response is an error\", () => {",
 							"  pm.expect(jsonData).to.be.an(\"object\");",
-							"  pm.expect(jsonData.id).to.be.a(\"number\");",
-							"  pm.expect(jsonData.username).to.be.a(\"string\");",
-							"  pm.expect(jsonData.text).to.be.a(\"string\");",
-							"});",
-							"pm.test(\"Location header is present\", () => {",
-							"  pm.response.to.have.header(\"Location\");",
+							"  pm.expect(jsonData.code).to.eql(\"BOOK_NOT_FOUND\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -529,14 +769,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/books/1/comments",
+					"raw": "localhost:8080/api/v1/books/99999/comments",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
-						"1",
+						"99999",
 						"comments"
 					]
 				}
@@ -609,7 +851,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "795929a8-ed60-457d-9710-df5672355857",
 						"exec": [
 							"pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
 							"const jsonData = pm.response.json();",
@@ -637,12 +878,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/books/1/comments",
+					"raw": "localhost:8080/api/v1/books/1/comments",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1",
 						"comments"
@@ -717,7 +960,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "81c34ef5-2593-4467-9989-709c0994eea6",
 						"exec": [
 							"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });"
 						],
@@ -729,16 +971,18 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/books/1/comments/1",
+					"raw": "localhost:8080/api/v1/books/1/comments/2",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1",
 						"comments",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -750,7 +994,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c9503605-bdcc-4dbe-941c-7b82802dfc5f",
 						"exec": [
 							"pm.test(\"Status code is 204\", function () { pm.response.to.have.status(204); });"
 						],
@@ -762,12 +1005,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/books/1",
+					"raw": "localhost:8080/api/v1/books/1",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"v1",
 						"books",
 						"1"
 					]
@@ -775,6 +1020,5 @@
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
