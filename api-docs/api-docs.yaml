@@ -26,14 +26,14 @@ paths:
         schema:
           type: string
       responses:
-        "400":
-          description: Invalid id supplied
         "200":
           description: Found the user
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        "400":
+          description: Invalid id supplied
         "404":
           description: user not found
     put:
@@ -54,14 +54,14 @@ paths:
               $ref: '#/components/schemas/UserDTO'
         required: true
       responses:
+        "500":
+          description: If a runtime error occurs while processing the request
         "200":
           description: If the user has been created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDTO'
-        "500":
-          description: If a runtime error occurs while processing the request
         "400":
           description: If one or more request parameters don't comply with the specification
     delete:
@@ -93,6 +93,8 @@ paths:
       summary: Get a list of users
       operationId: getUsers
       responses:
+        "500":
+          description: If a runtime error occurs while processing the request
         "200":
           description: Returns the list of users
           content:
@@ -101,8 +103,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserDTO'
-        "500":
-          description: If a runtime error occurs while processing the request
     post:
       tags:
       - user-controller
@@ -115,14 +115,14 @@ paths:
               $ref: '#/components/schemas/UserDTO'
         required: true
       responses:
+        "500":
+          description: If a runtime error occurs while processing the request
         "200":
           description: If the user has been created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDTO'
-        "500":
-          description: If a runtime error occurs while processing the request
         "400":
           description: If one or more request parameters don't comply with the specification
   /api/v1/books/{id}/comments:
@@ -145,14 +145,14 @@ paths:
               $ref: '#/components/schemas/Comment'
         required: true
       responses:
+        "500":
+          description: If a runtime error occurs while processing the request
         "200":
           description: If the comment has been created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
-        "500":
-          description: If a runtime error occurs while processing the request
         "400":
           description: If one or more request parameters don't comply with the specification
   /api/v1/books/:
@@ -162,6 +162,8 @@ paths:
       summary: Get a list of books
       operationId: getBooks
       responses:
+        "500":
+          description: If a runtime error occurs while processing the request
         "200":
           description: Returns the list of books
           content:
@@ -170,8 +172,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BookListResponseDTO'
-        "500":
-          description: If a runtime error occurs while processing the request
     post:
       tags:
       - book-controller
@@ -207,6 +207,8 @@ paths:
         schema:
           type: string
       responses:
+        "404":
+          description: Comment not found
         "400":
           description: Invalid id supplied
         "200":
@@ -218,8 +220,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CommentDTO'
-        "404":
-          description: Comment not found
   /api/v1/books/{id}:
     get:
       tags:
@@ -234,8 +234,6 @@ paths:
           type: integer
           format: int64
       responses:
-        "404":
-          description: Book not found
         "400":
           description: Invalid id supplied
         "200":
@@ -244,6 +242,8 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Book'
+        "404":
+          description: Book not found
     delete:
       tags:
       - book-controller
@@ -257,10 +257,10 @@ paths:
           type: integer
           format: int64
       responses:
-        "404":
-          description: Book not found
         "400":
           description: Invalid id supplied
+        "404":
+          description: Book not found
         "204":
           description: If the book has been deleted successfully
           content:
@@ -287,8 +287,6 @@ paths:
           type: integer
           format: int64
       responses:
-        "400":
-          description: Invalid id supplied
         "200":
           description: Found the comment
           content:
@@ -297,6 +295,8 @@ paths:
                 $ref: '#/components/schemas/Comment'
         "404":
           description: Comment not found
+        "400":
+          description: Invalid id supplied
     delete:
       tags:
       - book-controller
@@ -316,12 +316,12 @@ paths:
           type: integer
           format: int64
       responses:
+        "404":
+          description: Comment not found
         "400":
           description: Invalid id supplied
         "204":
           description: If the comment has been deleted successfully
-        "404":
-          description: Comment not found
 components:
   schemas:
     UserDTO:

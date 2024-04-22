@@ -3,8 +3,8 @@ package es.torres.books.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class Book {
 
